@@ -65,7 +65,8 @@ namespace LtiAdvantage.IdentityModel.Client
             payload.AddClaim(new Claim(JwtRegisteredClaimNames.Iss, clientId));
             payload.AddClaim(new Claim(JwtRegisteredClaimNames.Sub, clientId));
             payload.AddClaim(new Claim(JwtRegisteredClaimNames.Aud, accessTokenUrl));
-            payload.AddClaim(new Claim(JwtRegisteredClaimNames.Iat, EpochTime.GetIntDate(DateTime.UtcNow).ToString()));
+            payload.AddClaim(new Claim(JwtRegisteredClaimNames.Iat, 
+                EpochTime.GetIntDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64));
             payload.AddClaim(new Claim(JwtRegisteredClaimNames.Nbf,
                 EpochTime.GetIntDate(DateTime.UtcNow.AddSeconds(-5)).ToString(), ClaimValueTypes.Integer64));
             payload.AddClaim(new Claim(JwtRegisteredClaimNames.Exp,
