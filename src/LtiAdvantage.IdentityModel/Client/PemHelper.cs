@@ -81,8 +81,9 @@ namespace LtiAdvantage.IdentityModel.Client
         /// Converts a private key in PEM format into an <see cref="RsaSecurityKey"/>.
         /// </summary>
         /// <param name="privateKey">The private key.</param>
+        /// <param name="keyId">The key ID (kid).</param>
         /// <returns>The private key as an <see cref="RsaSecurityKey"/>.</returns>
-        public static SigningCredentials SigningCredentialsFromPemString(string privateKey)
+        public static SigningCredentials SigningCredentialsFromPemString(string privateKey, string keyId)
         {
             using (var keyTextReader = new StringReader(privateKey))
             {
@@ -100,7 +101,7 @@ namespace LtiAdvantage.IdentityModel.Client
                     D = keyParameters.Exponent.ToByteArrayUnsigned(),
                     Exponent = keyParameters.PublicExponent.ToByteArrayUnsigned()
                 };
-                var key = new RsaSecurityKey(parameters);
+                var key = new RsaSecurityKey(parameters) { KeyId = keyId };
                 return new SigningCredentials(key, SecurityAlgorithms.RsaSha256);
             }
         }

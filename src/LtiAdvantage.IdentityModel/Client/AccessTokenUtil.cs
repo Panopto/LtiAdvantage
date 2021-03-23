@@ -20,14 +20,21 @@ namespace LtiAdvantage.IdentityModel.Client
         /// <summary>
         /// Get an access token from the issuer.
         /// </summary>
+        /// <param name="kid">The key ID (kid).</param>
         /// <param name="issuer">The issuer.</param>
         /// <param name="scopes">The scopes to request.</param>
         /// <param name="clientId">The tool's client identifier.</param>
         /// <param name="accessTokenUrl">The platform's access token url.</param>
         /// <param name="privateKey">The tool's private key.</param>
         /// <returns>The token response.</returns>
-        public static async Task<TokenResponse> GetAccessTokenAsync(string issuer, string[] scopes, string clientId, string accessTokenUrl, string privateKey)
+        public static async Task<TokenResponse> GetAccessTokenAsync(string kid, string issuer, string[] scopes, string clientId,
+            string accessTokenUrl, string privateKey)
         {
+            if (kid.IsMissing())
+            {
+                return new TokenResponse(new ArgumentNullException(nameof(kid)));
+            }
+
             if (issuer.IsMissing())
             {
                 return new TokenResponse(new ArgumentNullException(nameof(issuer)));
@@ -66,7 +73,8 @@ namespace LtiAdvantage.IdentityModel.Client
             payload.AddClaim(new Claim(JwtRegisteredClaimNames.Jti, CryptoRandom.CreateRandomKeyString(32)));
 
             var handler = new JwtSecurityTokenHandler();
-            var credentials = PemHelper.SigningCredentialsFromPemString(privateKey);
+            var credentials = PemHelper.SigningCredentialsFromPemString(privateKey, kid);
+
             var jwt = handler.WriteToken(new JwtSecurityToken(new JwtHeader(credentials), payload));
 
             return await HttpClient.RequestClientCredentialsTokenWithJwtAsync(
