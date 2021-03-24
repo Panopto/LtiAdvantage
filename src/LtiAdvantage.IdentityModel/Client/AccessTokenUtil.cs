@@ -26,9 +26,10 @@ namespace LtiAdvantage.IdentityModel.Client
         /// <param name="clientId">The tool's client identifier.</param>
         /// <param name="accessTokenUrl">The platform's access token url.</param>
         /// <param name="privateKey">The tool's private key.</param>
+        /// <param name="audience">Optional audience to use if different than access token url.</param>
         /// <returns>The token response.</returns>
         public static async Task<TokenResponse> GetAccessTokenAsync(string kid, string issuer, string[] scopes, string clientId,
-            string accessTokenUrl, string privateKey)
+            string accessTokenUrl, string privateKey, string audience = default)
         {
             if (kid.IsMissing())
             {
@@ -64,8 +65,9 @@ namespace LtiAdvantage.IdentityModel.Client
             var payload = new JwtPayload();
             payload.AddClaim(new Claim(JwtRegisteredClaimNames.Iss, issuer));
             payload.AddClaim(new Claim(JwtRegisteredClaimNames.Sub, clientId));
-            payload.AddClaim(new Claim(JwtRegisteredClaimNames.Aud, accessTokenUrl));
-            payload.AddClaim(new Claim(JwtRegisteredClaimNames.Iat, 
+            payload.AddClaim(new Claim(JwtRegisteredClaimNames.Aud,
+                string.IsNullOrEmpty(audience) ? accessTokenUrl : audience));
+            payload.AddClaim(new Claim(JwtRegisteredClaimNames.Iat,
                 EpochTime.GetIntDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64));
             payload.AddClaim(new Claim(JwtRegisteredClaimNames.Nbf,
                 EpochTime.GetIntDate(DateTime.UtcNow.AddSeconds(-5)).ToString(), ClaimValueTypes.Integer64));
