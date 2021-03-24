@@ -62,7 +62,7 @@ namespace LtiAdvantage.IdentityModel.Client
 
             // Use a signed JWT as client credentials.
             var payload = new JwtPayload();
-            payload.AddClaim(new Claim(JwtRegisteredClaimNames.Iss, clientId));
+            payload.AddClaim(new Claim(JwtRegisteredClaimNames.Iss, issuer));
             payload.AddClaim(new Claim(JwtRegisteredClaimNames.Sub, clientId));
             payload.AddClaim(new Claim(JwtRegisteredClaimNames.Aud, accessTokenUrl));
             payload.AddClaim(new Claim(JwtRegisteredClaimNames.Iat, 
