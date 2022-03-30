@@ -7,10 +7,10 @@
     <AssemblyName>LtiAdvantage.IdentityModel</AssemblyName>
     <PackageId>LtiAdvantage.IdentityModel</PackageId>
     <PackageTags>IMS;LTI;LTIAdvantage;.NET Core</PackageTags>
-    <PackageProjectUrl>https://github.com/LtiLibrary/LtiAdvantage</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/LtiLibrary/LtiAdvantage/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Panopto/LtiAdvantage</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/Panopto/LtiAdvantage/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/LtiLibrary/LtiAdvantage</RepositoryUrl>
+    <RepositoryUrl>https://github.com/Panopto/LtiAdvantage</RepositoryUrl>
     <MinVerTagPrefix>v</MinVerTagPrefix>
   </PropertyGroup>
 
