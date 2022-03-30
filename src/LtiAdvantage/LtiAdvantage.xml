@@ -1135,7 +1135,7 @@
             </summary>
             <param name="claims">A list of claims.</param>
         </member>
-        <member name="M:LtiAdvantage.DeepLinking.LtiDeepLinkingRequest.#ctor(System.IdentityModel.Tokens.Jwt.JwtPayload)">
+        <member name="M:LtiAdvantage.DeepLinking.LtiDeepLinkingRequest.#ctor(System.IdentityModel.Tokens.JwtPayload)">
             <inheritdoc />
             <summary>
             Create a request with the claims in payload.
@@ -1166,7 +1166,7 @@
             </summary>
             <param name="claims">A list of claims.</param>
         </member>
-        <member name="M:LtiAdvantage.DeepLinking.LtiDeepLinkingResponse.#ctor(System.IdentityModel.Tokens.Jwt.JwtPayload)">
+        <member name="M:LtiAdvantage.DeepLinking.LtiDeepLinkingResponse.#ctor(System.IdentityModel.Tokens.JwtPayload)">
             <inheritdoc />
             <summary>
             Create a request with the claims in payload.
@@ -2722,7 +2722,7 @@
             </summary>
             <param name="claims">A list of claims.</param>
         </member>
-        <member name="M:LtiAdvantage.Lti.LtiRequest.#ctor(System.IdentityModel.Tokens.Jwt.JwtPayload)">
+        <member name="M:LtiAdvantage.Lti.LtiRequest.#ctor(System.IdentityModel.Tokens.JwtPayload)">
             <inheritdoc />
             <summary>
             Create an instance with the claims in payload.
@@ -2896,7 +2896,7 @@
             </summary>
             <param name="claims">A list of claims.</param>
         </member>
-        <member name="M:LtiAdvantage.Lti.LtiResourceLinkRequest.#ctor(System.IdentityModel.Tokens.Jwt.JwtPayload)">
+        <member name="M:LtiAdvantage.Lti.LtiResourceLinkRequest.#ctor(System.IdentityModel.Tokens.JwtPayload)">
             <inheritdoc />
             <summary>
             Create an instance of <see cref="T:LtiAdvantage.Lti.LtiResourceLinkRequest" /> with the
@@ -3301,18 +3301,18 @@
             Extensions to make working with JWT Tokens easier.
             </summary>
         </member>
-        <member name="M:LtiAdvantage.Utilities.JwtExtensions.GetClaimValue(System.IdentityModel.Tokens.Jwt.JwtPayload,System.String)">
+        <member name="M:LtiAdvantage.Utilities.JwtExtensions.GetClaimValue(System.IdentityModel.Tokens.JwtPayload,System.String)">
             <summary>
             Get the payload claim value as a string.
             </summary>
             <returns>The claim value as a string.</returns>
         </member>
-        <member name="M:LtiAdvantage.Utilities.JwtExtensions.GetClaimValue``1(System.IdentityModel.Tokens.Jwt.JwtPayload,System.String)">
+        <member name="M:LtiAdvantage.Utilities.JwtExtensions.GetClaimValue``1(System.IdentityModel.Tokens.JwtPayload,System.String)">
             <summary>
             Get the payload claim value as an object of type T.
             </summary>
             <typeparam name="T">The expected Type of the claim value.</typeparam>
-            <param name="payload">The <see cref="T:System.IdentityModel.Tokens.Jwt.JwtPayload"/> with the claim.</param>
+            <param name="payload">The <see cref="T:System.IdentityModel.Tokens.JwtPayload"/> with the claim.</param>
             <param name="type">The claim type.</param>
             <returns>The claim value as an object of type T.</returns>
         </member>

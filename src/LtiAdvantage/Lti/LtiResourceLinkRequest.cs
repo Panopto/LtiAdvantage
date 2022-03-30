@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel.Tokens;
 using System.Security.Claims;
 using LtiAdvantage.AssignmentGradeServices;
 using LtiAdvantage.NamesRoleProvisioningService;

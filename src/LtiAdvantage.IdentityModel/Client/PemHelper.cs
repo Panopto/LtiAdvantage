@@ -1,7 +1,7 @@
-﻿using System.IO;
+﻿using System.IdentityModel.Tokens;
+using System.IO;
 using System.Security.Cryptography;
 using IdentityModel;
-using Microsoft.IdentityModel.Tokens;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
@@ -25,7 +25,7 @@ namespace LtiAdvantage.IdentityModel.Client
         {
             public RsaKeyPair()
             {
-                KeyId = CryptoRandom.CreateRandomKeyString(8);
+                KeyId = CryptoRandom.CreateUniqueId(8);
             }
 
             /// <summary>
@@ -101,8 +101,15 @@ namespace LtiAdvantage.IdentityModel.Client
                     D = keyParameters.Exponent.ToByteArrayUnsigned(),
                     Exponent = keyParameters.PublicExponent.ToByteArrayUnsigned()
                 };
-                var key = new RsaSecurityKey(parameters) { KeyId = keyId };
-                return new SigningCredentials(key, SecurityAlgorithms.RsaSha256);
+
+                var key = new RsaSecurityKey(RSA.Create(parameters));
+
+                return new SigningCredentials(
+                    key,
+                    SecurityAlgorithms.RsaSha256Signature,
+                    SecurityAlgorithms.Sha256Digest,
+                    new SecurityKeyIdentifier(
+                        new NamedKeySecurityKeyIdentifierClause("kid", keyId)));
             }
         }
 
@@ -121,7 +128,7 @@ namespace LtiAdvantage.IdentityModel.Client
                     Modulus = keyParameters.Modulus.ToByteArrayUnsigned(),
                     Exponent = keyParameters.Exponent.ToByteArrayUnsigned()
                 };
-                return new RsaSecurityKey(parameters);
+                return new RsaSecurityKey(RSA.Create(parameters));
             }
         }
     }

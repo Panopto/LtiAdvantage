@@ -1,12 +1,11 @@
 ﻿using System;
-using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel.Tokens;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using IdentityModel;
 using IdentityModel.Client;
 using LtiAdvantage.Utilities;
-using Microsoft.IdentityModel.Tokens;
 
 namespace LtiAdvantage.IdentityModel.Client
 {
@@ -33,32 +32,32 @@ namespace LtiAdvantage.IdentityModel.Client
         {
             if (kid.IsMissing())
             {
-                return new TokenResponse(new ArgumentNullException(nameof(kid)));
+                return TokenResponse.FromException<TokenResponse>(new ArgumentNullException(nameof(kid)));
             }
 
             if (issuer.IsMissing())
             {
-                return new TokenResponse(new ArgumentNullException(nameof(issuer)));
+                return TokenResponse.FromException<TokenResponse>(new ArgumentNullException(nameof(issuer)));
             }
 
             if (scopes == null)
             {
-                return new TokenResponse(new ArgumentNullException(nameof(scopes)));
+                return TokenResponse.FromException<TokenResponse>(new ArgumentNullException(nameof(scopes)));
             }
 
             if (clientId.IsMissing())
             {
-                return new TokenResponse(new ArgumentNullException(nameof(clientId)));
+                return TokenResponse.FromException<TokenResponse>(new ArgumentNullException(nameof(clientId)));
             }
 
             if (accessTokenUrl.IsMissing())
             {
-                return new TokenResponse(new ArgumentNullException(nameof(accessTokenUrl)));
+                return TokenResponse.FromException<TokenResponse>(new ArgumentNullException(nameof(accessTokenUrl)));
             }
 
             if (privateKey.IsMissing())
             {
-                return new TokenResponse(new ArgumentNullException(nameof(privateKey)));
+                return TokenResponse.FromException<TokenResponse>(new ArgumentNullException(nameof(privateKey)));
             }
 
             // Use a signed JWT as client credentials.
@@ -73,7 +72,7 @@ namespace LtiAdvantage.IdentityModel.Client
                 EpochTime.GetIntDate(DateTime.UtcNow.AddSeconds(-5)).ToString(), ClaimValueTypes.Integer64));
             payload.AddClaim(new Claim(JwtRegisteredClaimNames.Exp,
                 EpochTime.GetIntDate(DateTime.UtcNow.AddMinutes(5)).ToString(), ClaimValueTypes.Integer64));
-            payload.AddClaim(new Claim(JwtRegisteredClaimNames.Jti, CryptoRandom.CreateRandomKeyString(32)));
+            payload.AddClaim(new Claim(JwtRegisteredClaimNames.Jti, CryptoRandom.CreateUniqueId(32)));
 
             var handler = new JwtSecurityTokenHandler();
             var credentials = PemHelper.SigningCredentialsFromPemString(privateKey, kid);

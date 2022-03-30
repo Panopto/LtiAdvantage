@@ -1,6 +1,7 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens;
 using System.Linq;
 using System.Security.Claims;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Newtonsoft.Json;
 
 namespace LtiAdvantage.Utilities

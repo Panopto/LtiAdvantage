@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel.Tokens;
 using System.Security.Claims;
 using LtiAdvantage.Utilities;
 
