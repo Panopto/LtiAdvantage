@@ -402,6 +402,11 @@
             Optional plain text message.
             </summary>
         </member>
+        <member name="F:LtiAdvantage.Constants.LtiClaims.Ext">
+            <summary>
+            This is a map of key/value extension parameters which are to be included with the launch.
+            </summary>
+        </member>
         <member name="F:LtiAdvantage.Constants.LtiClaims.LaunchPresentation">
             <summary>
             Information to help the Tool present itself appropriately.
@@ -2795,6 +2800,11 @@
         <member name="P:LtiAdvantage.Lti.LtiRequest.Custom">
             <summary>
             This is a map of key/value custom parameters which are to be included with the launch.
+            </summary>
+        </member>
+        <member name="P:LtiAdvantage.Lti.LtiRequest.Ext">
+            <summary>
+            This is a map of key/value extension parameters which are to be included with the launch.
             </summary>
         </member>
         <member name="P:LtiAdvantage.Lti.LtiRequest.LaunchPresentation">

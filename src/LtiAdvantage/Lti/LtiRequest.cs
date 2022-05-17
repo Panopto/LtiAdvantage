@@ -164,6 +164,15 @@ namespace LtiAdvantage.Lti
         }
 
         /// <summary>
+        /// This is a map of key/value extension parameters which are to be included with the launch.
+        /// </summary>
+        public Dictionary<string, string> Ext
+        {
+            get { return this.GetClaimValue<Dictionary<string, string>>(Constants.LtiClaims.Ext); }
+            set { this.SetClaimValue(Constants.LtiClaims.Ext, value); }
+        }
+
+        /// <summary>
         /// Information to help the Tool present itself appropriately.
         /// </summary>
         public LaunchPresentationClaimValueType LaunchPresentation

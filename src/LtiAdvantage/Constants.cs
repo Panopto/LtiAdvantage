@@ -116,6 +116,11 @@
             public const string ErrorMessage = "https://purl.imsglobal.org/spec/lti-dl/claim/errormsg";
 
             /// <summary>
+            /// This is a map of key/value extension parameters which are to be included with the launch.
+            /// </summary>
+            public const string Ext = "https://purl.imsglobal.org/spec/lti/claim/ext";
+
+            /// <summary>
             /// Information to help the Tool present itself appropriately.
             /// </summary>
             public const string LaunchPresentation = "https://purl.imsglobal.org/spec/lti/claim/launch_presentation";
