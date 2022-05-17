@@ -1,4 +1,7 @@
-﻿using System.IdentityModel.Tokens;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -63,7 +66,8 @@ namespace LtiAdvantage.Utilities
             {
                 return JsonConvert.DeserializeObject<T>("[" + string.Join(",", values) + "]");
             }
-            return JsonConvert.DeserializeObject<T>("[\"" + string.Join("\",\"", values) + "\"]");
+            string json = $"[{string.Join(",", values)}]";
+            return JsonConvert.DeserializeObject<T>(json);
         }
 
         public static void SetClaimValue<T>(this JwtPayload payload, string type, T value)
