@@ -46,7 +46,7 @@ namespace LtiAdvantage.NamesRoleProvisioningService
         /// See https://www.imsglobal.org/spec/lti-nrps/v2p0#membership-container-media-type.
         /// </remarks>
         [JsonProperty("message")]
-        public LtiResourceLinkRequest[] Message { get; set; }
+        public LtiRequest[] Message { get; set; }
 
         /// <summary>
         /// The person's assigned full name (typically their first name followed

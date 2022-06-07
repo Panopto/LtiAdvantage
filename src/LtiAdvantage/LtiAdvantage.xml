@@ -1121,93 +1121,6 @@
             Create a new content item.
             </summary>
         </member>
-        <member name="T:LtiAdvantage.DeepLinking.LtiDeepLinkingRequest">
-            <inheritdoc />
-            <summary>
-            LTI Deep Linking request.
-            </summary>
-        </member>
-        <member name="M:LtiAdvantage.DeepLinking.LtiDeepLinkingRequest.#ctor">
-            <inheritdoc />
-            <summary>
-            Create an empty request.
-            </summary>
-        </member>
-        <member name="M:LtiAdvantage.DeepLinking.LtiDeepLinkingRequest.#ctor(System.Collections.Generic.IEnumerable{System.Security.Claims.Claim})">
-            <inheritdoc />
-            <summary>
-            Create a request with the claims.
-            </summary>
-            <param name="claims">A list of claims.</param>
-        </member>
-        <member name="M:LtiAdvantage.DeepLinking.LtiDeepLinkingRequest.#ctor(System.IdentityModel.Tokens.JwtPayload)">
-            <inheritdoc />
-            <summary>
-            Create a request with the claims in payload.
-            </summary>
-            <param name="payload"></param>
-        </member>
-        <member name="P:LtiAdvantage.DeepLinking.LtiDeepLinkingRequest.DeepLinkingSettings">
-            <summary>
-            Deep Linking settings.
-            </summary>
-        </member>
-        <member name="T:LtiAdvantage.DeepLinking.LtiDeepLinkingResponse">
-            <inheritdoc />
-            <summary>
-            LTI Deep Linking response.
-            </summary>
-        </member>
-        <member name="M:LtiAdvantage.DeepLinking.LtiDeepLinkingResponse.#ctor">
-            <inheritdoc />
-            <summary>
-            Create an empty request.
-            </summary>
-        </member>
-        <member name="M:LtiAdvantage.DeepLinking.LtiDeepLinkingResponse.#ctor(System.Collections.Generic.IEnumerable{System.Security.Claims.Claim})">
-            <inheritdoc />
-            <summary>
-            Create a request with the claims.
-            </summary>
-            <param name="claims">A list of claims.</param>
-        </member>
-        <member name="M:LtiAdvantage.DeepLinking.LtiDeepLinkingResponse.#ctor(System.IdentityModel.Tokens.JwtPayload)">
-            <inheritdoc />
-            <summary>
-            Create a request with the claims in payload.
-            </summary>
-            <param name="payload"></param>
-        </member>
-        <member name="P:LtiAdvantage.DeepLinking.LtiDeepLinkingResponse.ContentItems">
-            <summary>
-            A possibly empty list of content items.
-            </summary>
-        </member>
-        <member name="P:LtiAdvantage.DeepLinking.LtiDeepLinkingResponse.Data">
-            <summary>
-            The value from deep linking settings.
-            </summary>
-        </member>
-        <member name="P:LtiAdvantage.DeepLinking.LtiDeepLinkingResponse.ErrorLog">
-            <summary>
-            Optional plain text message.
-            </summary>
-        </member>
-        <member name="P:LtiAdvantage.DeepLinking.LtiDeepLinkingResponse.ErrorMessage">
-            <summary>
-            Optional plain text message.
-            </summary>
-        </member>
-        <member name="P:LtiAdvantage.DeepLinking.LtiDeepLinkingResponse.Log">
-            <summary>
-            Optional plain text message.
-            </summary>
-        </member>
-        <member name="P:LtiAdvantage.DeepLinking.LtiDeepLinkingResponse.Message">
-            <summary>
-            Optional plain text message.
-            </summary>
-        </member>
         <member name="T:LtiAdvantage.DeepLinking.LtiLinkItem">
             <inheritdoc cref="T:LtiAdvantage.DeepLinking.ILtiLinkItem" />
             <summary>
@@ -2720,19 +2633,10 @@
             Create an empty instance.
             </summary>
         </member>
-        <member name="M:LtiAdvantage.Lti.LtiRequest.#ctor(System.Collections.Generic.IEnumerable{System.Security.Claims.Claim})">
-            <inheritdoc />
+        <member name="P:LtiAdvantage.Lti.LtiRequest.Claims">
             <summary>
-            Create an instance with the claims.
+            Override the base Claims property in order to process claims using Newtonsoft
             </summary>
-            <param name="claims">A list of claims.</param>
-        </member>
-        <member name="M:LtiAdvantage.Lti.LtiRequest.#ctor(System.IdentityModel.Tokens.JwtPayload)">
-            <inheritdoc />
-            <summary>
-            Create an instance with the claims in payload.
-            </summary>
-            <param name="payload"></param>
         </member>
         <member name="P:LtiAdvantage.Lti.LtiRequest.Audiences">
             <summary>
@@ -2828,6 +2732,63 @@
             An array of the user_id ('sub' claim) values which the current user can access as a mentor.
             </summary>
         </member>
+        <member name="P:LtiAdvantage.Lti.LtiRequest.AssignmentGradeServices">
+            <summary>
+            The Assignment and Grade Services claim.
+            </summary>
+        </member>
+        <member name="P:LtiAdvantage.Lti.LtiRequest.NamesRoleService">
+            <summary>
+            The Names and Roles Provisioning Service claim.
+            </summary>
+        </member>
+        <member name="P:LtiAdvantage.Lti.LtiRequest.ResourceLink">
+            <summary>
+            The required https://purl.imsglobal.org/spec/lti/claim/resource_link claim composes
+            properties for the resource link from which the launch message occurs.
+            <example>
+            {
+              "id": "200d101f-2c14-434a-a0f3-57c2a42369fd",
+              ...
+            }
+            </example>
+            </summary>
+        </member>
+        <member name="P:LtiAdvantage.Lti.LtiRequest.DeepLinkingSettings">
+            <summary>
+            Deep Linking settings.
+            </summary>
+        </member>
+        <member name="P:LtiAdvantage.Lti.LtiRequest.ContentItems">
+            <summary>
+            A possibly empty list of content items.
+            </summary>
+        </member>
+        <member name="P:LtiAdvantage.Lti.LtiRequest.Data">
+            <summary>
+            The value from deep linking settings.
+            </summary>
+        </member>
+        <member name="P:LtiAdvantage.Lti.LtiRequest.ErrorLog">
+            <summary>
+            Optional plain text message.
+            </summary>
+        </member>
+        <member name="P:LtiAdvantage.Lti.LtiRequest.ErrorMessage">
+            <summary>
+            Optional plain text message.
+            </summary>
+        </member>
+        <member name="P:LtiAdvantage.Lti.LtiRequest.Log">
+            <summary>
+            Optional plain text message.
+            </summary>
+        </member>
+        <member name="P:LtiAdvantage.Lti.LtiRequest.Message">
+            <summary>
+            Optional plain text message.
+            </summary>
+        </member>
         <member name="P:LtiAdvantage.Lti.LtiRequest.Email">
             <summary>
             End-User's preferred e-mail address. Its value MUST conform to the RFC 5322 [RFC5322]
@@ -2886,55 +2847,11 @@
             </example>
             </summary>
         </member>
-        <member name="T:LtiAdvantage.Lti.LtiResourceLinkRequest">
-            <inheritdoc />
+        <member name="M:LtiAdvantage.Lti.LtiRequest.SerializeToJson">
             <summary>
-            https://purl.imsglobal.org/spec/lti/v1p3/schema/json/LtiResourceLinkRequest.json
+            Override the base serialization in order to use Newtonsoft
             </summary>
-        </member>
-        <member name="M:LtiAdvantage.Lti.LtiResourceLinkRequest.#ctor">
-            <inheritdoc />
-            <summary>
-            Create an instance of <see cref="T:LtiAdvantage.Lti.LtiResourceLinkRequest" /> with default values
-            for the MessageType and Version claims.
-            </summary>
-        </member>
-        <member name="M:LtiAdvantage.Lti.LtiResourceLinkRequest.#ctor(System.Collections.Generic.IEnumerable{System.Security.Claims.Claim})">
-            <inheritdoc />
-            <summary>
-            Create an instance of <see cref="T:LtiAdvantage.Lti.LtiResourceLinkRequest" /> with the claims.
-            </summary>
-            <param name="claims">A list of claims.</param>
-        </member>
-        <member name="M:LtiAdvantage.Lti.LtiResourceLinkRequest.#ctor(System.IdentityModel.Tokens.JwtPayload)">
-            <inheritdoc />
-            <summary>
-            Create an instance of <see cref="T:LtiAdvantage.Lti.LtiResourceLinkRequest" /> with the
-            claims in payload.
-            </summary>
-            <param name="payload"></param>
-        </member>
-        <member name="P:LtiAdvantage.Lti.LtiResourceLinkRequest.AssignmentGradeServices">
-            <summary>
-            The Assignment and Grade Services claim.
-            </summary>
-        </member>
-        <member name="P:LtiAdvantage.Lti.LtiResourceLinkRequest.NamesRoleService">
-            <summary>
-            The Names and Roles Provisioning Service claim.
-            </summary>
-        </member>
-        <member name="P:LtiAdvantage.Lti.LtiResourceLinkRequest.ResourceLink">
-            <summary>
-            The required https://purl.imsglobal.org/spec/lti/claim/resource_link claim composes
-            properties for the resource link from which the launch message occurs.
-            <example>
-            {
-              "id": "200d101f-2c14-434a-a0f3-57c2a42369fd",
-              ...
-            }
-            </example>
-            </summary>
+            <returns></returns>
         </member>
         <member name="T:LtiAdvantage.Lti.PlatformClaimValueType">
             <summary>

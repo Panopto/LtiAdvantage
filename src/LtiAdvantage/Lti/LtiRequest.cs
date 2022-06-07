@@ -1,7 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens;
 using System.Security.Claims;
+using LtiAdvantage.AssignmentGradeServices;
+using LtiAdvantage.DeepLinking;
+using LtiAdvantage.NamesRoleProvisioningService;
 using LtiAdvantage.Utilities;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using JsonClaimValueTypes = Microsoft.IdentityModel.JsonWebTokens.JsonClaimValueTypes;
 
 namespace LtiAdvantage.Lti
 {
@@ -9,37 +16,70 @@ namespace LtiAdvantage.Lti
     /// <summary>
     /// The base class for LtiResourceLinkRequest and LtiDeepLinkingRequest.
     /// </summary>
-    public abstract class LtiRequest : JwtPayload
+    public class LtiRequest : JwtPayload
     {
+        private readonly JsonSerializerSettings serializerSettings = new JsonSerializerSettings
+        {
+            NullValueHandling = NullValueHandling.Ignore,
+            Formatting = Formatting.None
+        };
+
         #region Constructors
 
         /// <inheritdoc />
         /// <summary>
         /// Create an empty instance.
         /// </summary>
-        protected LtiRequest()
-        {
-        }
-
-        /// <inheritdoc />
-        /// <summary>
-        /// Create an instance with the claims.
-        /// </summary>
-        /// <param name="claims">A list of claims.</param>
-        protected LtiRequest(IEnumerable<Claim> claims) : base(claims)
-        {
-        }
-
-        /// <inheritdoc />
-        /// <summary>
-        /// Create an instance with the claims in payload.
-        /// </summary>
-        /// <param name="payload"></param>
-        protected LtiRequest(JwtPayload payload) : base(payload.Claims)
+        public LtiRequest()
         {
         }
 
         #endregion
+
+        /// <summary>
+        /// Override the base Claims property in order to process claims using Newtonsoft
+        /// </summary>
+        public override IEnumerable<Claim> Claims
+        {
+            get
+            {
+                List<Claim> claims = new List<Claim>();
+                string issuer = this.Iss;
+                foreach (KeyValuePair<string, object> kvp in this)
+                {
+                    string key = kvp.Key;
+                    if (kvp.Value is string stringValue)
+                    {
+                        claims.Add(new Claim(kvp.Key, stringValue, ClaimValueTypes.String, issuer, issuer));
+                    }
+                    else if (kvp.Value is long longValue)
+                    {
+                        claims.Add(new Claim(kvp.Key, longValue.ToString(), ClaimValueTypes.Integer64, issuer, issuer));
+                    }
+                    else if (kvp.Value is JArray array)
+                    {
+                        string value = array.ToString(Formatting.None);
+                        claims.Add(new Claim(key, value, JsonClaimValueTypes.JsonArray, issuer, issuer)
+                        {
+                            Properties = { [JwtSecurityTokenHandler.JsonClaimTypeProperty] = kvp.Value.GetType().ToString() }
+                        });
+                    }
+                    else if (kvp.Value is JObject obj)
+                    {
+                        string value = obj.ToString(Formatting.None);
+                        claims.Add(new Claim(key, value, JsonClaimValueTypes.Json, issuer, issuer)
+                        {
+                            Properties = { [JwtSecurityTokenHandler.JsonClaimTypeProperty] = kvp.Value.GetType().ToString() }
+                        });
+                    }
+                    else
+                    {
+                        throw new NotImplementedException();
+                    }
+                }
+                return claims;
+            }
+        }
 
         #region Required Message Claims
 
@@ -211,8 +251,121 @@ namespace LtiAdvantage.Lti
 
         #endregion
 
+        #region Resource Link Request claims
+
+        // See https://www.imsglobal.org/spec/lti/v1p3/#required-message-claims
+        // See https://openid.net/specs/openid-connect-core-1_0.html#Claims
+        // See https://purl.imsglobal.org/spec/lti/v1p3/schema/json/Token.json
+
+        /// <summary>
+        /// The Assignment and Grade Services claim.
+        /// </summary>
+        public AssignmentGradeServicesClaimValueType AssignmentGradeServices
+        {
+            get { return this.GetClaimValue<AssignmentGradeServicesClaimValueType>(Constants.LtiClaims.AssignmentGradeServices); }
+            set { this.SetClaimValue(Constants.LtiClaims.AssignmentGradeServices, value); }
+        }
+
+        /// <summary>
+        /// The Names and Roles Provisioning Service claim.
+        /// </summary>
+        public NamesRoleServiceClaimValueType NamesRoleService
+        {
+            get { return this.GetClaimValue<NamesRoleServiceClaimValueType>(Constants.LtiClaims.NamesRoleService); }
+            set { this.SetClaimValue(Constants.LtiClaims.NamesRoleService, value); }
+        }
+
+        /// <summary>
+        /// The required https://purl.imsglobal.org/spec/lti/claim/resource_link claim composes
+        /// properties for the resource link from which the launch message occurs.
+        /// <example>
+        /// {
+        ///   "id": "200d101f-2c14-434a-a0f3-57c2a42369fd",
+        ///   ...
+        /// }
+        /// </example>
+        /// </summary>
+        public ResourceLinkClaimValueType ResourceLink
+        {
+            get { return this.GetClaimValue<ResourceLinkClaimValueType>(Constants.LtiClaims.ResourceLink); }
+            set { this.SetClaimValue(Constants.LtiClaims.ResourceLink, value); }
+        }
+
+        #endregion
+
+        #region Deep Linking Request claims
+
+        /// <summary>
+        /// Deep Linking settings.
+        /// </summary>
+        public DeepLinkingSettingsClaimValueType DeepLinkingSettings
+        {
+            get { return this.GetClaimValue<DeepLinkingSettingsClaimValueType>(Constants.LtiClaims.DeepLinkingSettings); }
+            set { this.SetClaimValue(Constants.LtiClaims.DeepLinkingSettings, value); }
+        }
+
+        #endregion
+
+        #region Deep Linking Response claims
+
+        /// <summary>
+        /// A possibly empty list of content items.
+        /// </summary>
+        public ContentItem[] ContentItems
+        {
+            get { return this.GetClaimValue<ContentItem[]>(Constants.LtiClaims.ContentItems); }
+            set { this.SetClaimValue(Constants.LtiClaims.ContentItems, value); }
+        }
+
+        /// <summary>
+        /// The value from deep linking settings.
+        /// </summary>
+        public string Data
+        {
+            get { return this.GetClaimValue(Constants.LtiClaims.Data); }
+            set { this.SetClaimValue(Constants.LtiClaims.Data, value); }
+        }
+
+        /// <summary>
+        /// Optional plain text message.
+        /// </summary>
+        public string ErrorLog
+        {
+            get { return this.GetClaimValue(Constants.LtiClaims.ErrorLog); }
+            set { this.SetClaimValue(Constants.LtiClaims.ErrorLog, value); }
+        }
+
+        /// <summary>
+        /// Optional plain text message.
+        /// </summary>
+        public string ErrorMessage
+        {
+            get { return this.GetClaimValue(Constants.LtiClaims.ErrorMessage); }
+            set { this.SetClaimValue(Constants.LtiClaims.ErrorMessage, value); }
+        }
+
+        /// <summary>
+        /// Optional plain text message.
+        /// </summary>
+        public string Log
+        {
+            get { return this.GetClaimValue(Constants.LtiClaims.Log); }
+            set { this.SetClaimValue(Constants.LtiClaims.Log, value); }
+        }
+
+        /// <summary>
+        /// Optional plain text message.
+        /// </summary>
+        public string Message
+        {
+            get { return this.GetClaimValue(Constants.LtiClaims.Message); }
+            set { this.SetClaimValue(Constants.LtiClaims.Message, value); }
+        }
+
+        #endregion
+
         #region Optional OpenID Connect claims
-        
+
         // See https://www.iana.org/assignments/jwt/jwt.xhtml#claims
         // See https://openid.net/specs/openid-connect-core-1_0.html#Claims
         // See https://purl.imsglobal.org/spec/lti/v1p3/schema/json/Token.json
@@ -300,5 +453,14 @@ namespace LtiAdvantage.Lti
         }
 
         #endregion
+
+        /// <summary>
+        /// Override the base serialization in order to use Newtonsoft
+        /// </summary>
+        /// <returns></returns>
+        public override string SerializeToJson()
+        {
+            return JsonConvert.SerializeObject(this, serializerSettings);
+        }
     }
 }

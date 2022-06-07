@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.IdentityModel.Tokens;
-using System.Linq;
-using System.Security.Claims;
-using Microsoft.IdentityModel.JsonWebTokens;
-using Newtonsoft.Json;
 
 namespace LtiAdvantage.Utilities
 {
@@ -14,11 +10,6 @@ namespace LtiAdvantage.Utilities
     /// </summary>
     internal static class JwtExtensions
     {
-        private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
-        {
-            NullValueHandling = NullValueHandling.Ignore
-        };
-
         /// <summary>
         /// Get the payload claim value as a string.
         /// </summary>
@@ -37,37 +28,34 @@ namespace LtiAdvantage.Utilities
         /// <returns>The claim value as an object of type T.</returns>
         public static T GetClaimValue<T>(this JwtPayload payload, string type)
         {
-            if (typeof(T).IsArray)
-            {
-                return GetClaimValues<T>(payload, type);
-            }
-
             if (payload.TryGetValue(type, out var value))
             {
-                return typeof(T) == typeof(string)
-                    ? JsonConvert.DeserializeObject<T>($"\"{value}\"")
-                    : JsonConvert.DeserializeObject<T>(value.ToString());
+                if (typeof(T).IsArray)
+                {
+                    if (value is string)
+                    {
+                        return JsonConvert.DeserializeObject<T>($"[\"{value}\"]");
+                    }
+                    else if (value is JArray)
+                    {
+                        return JsonConvert.DeserializeObject<T>(value.ToString());
+                    }
+                    else
+                    {
+                        throw new NotImplementedException();
+                    }
+                }
+                else if (typeof(T) == typeof(string))
+                {
+                    return JsonConvert.DeserializeObject<T>($"\"{value}\"");
+                }
+                else
+                {
+                    return JsonConvert.DeserializeObject<T>(value.ToString());
+                }
             }
 
             return default(T);
-        }
-
-        private static T GetClaimValues<T>(this JwtPayload payload, string type)
-        {
-            var values = payload.Claims
-                .Where(c => c.Type == type)
-                .Select(c => c.Value).ToArray();
-
-            if (0 == values.Length)
-                return default(T);
-
-            var elementType = typeof(T).GetElementType();
-            if (elementType != null && elementType.IsClass && !elementType.IsEquivalentTo(typeof(string)))
-            {
-                return JsonConvert.DeserializeObject<T>("[" + string.Join(",", values) + "]");
-            }
-            string json = $"[{string.Join(",", values)}]";
-            return JsonConvert.DeserializeObject<T>(json);
         }
 
         public static void SetClaimValue<T>(this JwtPayload payload, string type, T value)
@@ -77,27 +65,8 @@ namespace LtiAdvantage.Utilities
                 payload.Remove(type);
             }
 
-            if (typeof(T) == typeof(string))
-            {
-                var stringValue = value?.ToString();
-                if (!string.IsNullOrWhiteSpace(stringValue))
-                {
-                    payload.AddClaim(new Claim(type, stringValue, ClaimValueTypes.String));
-                }
-            } 
-            else if (typeof(T) == typeof(int))
-            {
-                payload.AddClaim(new Claim(type, value.ToString(), ClaimValueTypes.Integer));
-            }
-            else if (typeof(T).IsArray)
-            {
-                payload.AddClaim(new Claim(type, JsonConvert.SerializeObject(value, Settings), JsonClaimValueTypes.JsonArray));
-            }
-            else
-            {
-                var json = JsonConvert.SerializeObject(value, Settings);
-                payload.AddClaim(new Claim(type, json, JsonClaimValueTypes.Json));
-            }
+            // Serialize our incoming value to JSON and subsequently deserialize to object so we end up w/ appropriate JToken value in dictionary
+            payload.Add(type, JsonConvert.DeserializeObject(JsonConvert.SerializeObject(value)));
         }
     }
 }
