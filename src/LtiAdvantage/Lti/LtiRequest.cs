@@ -72,10 +72,6 @@ namespace LtiAdvantage.Lti
                             Properties = { [JwtSecurityTokenHandler.JsonClaimTypeProperty] = kvp.Value.GetType().ToString() }
                         });
                     }
-                    else
-                    {
-                        throw new NotImplementedException();
-                    }
                 }
                 return claims;
             }
