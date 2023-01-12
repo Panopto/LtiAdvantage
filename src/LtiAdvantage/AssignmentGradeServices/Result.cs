@@ -28,13 +28,13 @@ namespace LtiAdvantage.AssignmentGradeServices
         /// Maximum result score.
         /// </summary>
         [JsonProperty("resultMaximum")]
-        public double ResultMaximum { get; set; }
+        public double? ResultMaximum { get; set; }
 
         /// <summary>
         /// The line item result.
         /// </summary>
         [JsonProperty("resultScore")]
-        public double ResultScore { get; set; }
+        public double? ResultScore { get; set; }
 
         /// <summary>
         /// The line item.
