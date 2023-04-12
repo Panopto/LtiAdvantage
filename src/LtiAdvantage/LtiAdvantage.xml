@@ -3243,6 +3243,17 @@
             <param name="type">The claim type.</param>
             <returns>The claim value as an object of type T.</returns>
         </member>
+        <member name="M:LtiAdvantage.Utilities.JwtExtensions.SetClaimValue``1(System.IdentityModel.Tokens.Jwt.JwtPayload,System.String,``0)">
+            <summary>
+            Set payload claim value as an object of type T
+            
+            Extra logic is present to differentiate between strings, ints, arrays, and objects
+            </summary>
+            <typeparam name="T">The expected Type of the claim value.</typeparam>
+            <param name="payload">The <see cref="T:System.IdentityModel.Tokens.Jwt.JwtPayload"/> with the claim.</param>
+            <param name="type">The claim type.</param>
+            <param name="value"> The claim value </param>
+        </member>
         <member name="T:LtiAdvantage.Utilities.UriAttribute">
             <summary>
             URIs are used to describe enumerated field values.

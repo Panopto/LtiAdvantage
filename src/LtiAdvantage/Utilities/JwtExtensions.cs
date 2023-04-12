@@ -8,7 +8,7 @@ namespace LtiAdvantage.Utilities
     /// <summary>
     /// Extensions to make working with JWT Tokens easier.
     /// </summary>
-    internal static class JwtExtensions
+    public static class JwtExtensions
     {
         /// <summary>
         /// Get the payload claim value as a string.
@@ -58,6 +58,15 @@ namespace LtiAdvantage.Utilities
             return default(T);
         }
 
+        /// <summary>
+        /// Set payload claim value as an object of type T
+        /// 
+        /// Extra logic is present to differentiate between strings, ints, arrays, and objects
+        /// </summary>
+        /// <typeparam name="T">The expected Type of the claim value.</typeparam>
+        /// <param name="payload">The <see cref="JwtPayload"/> with the claim.</param>
+        /// <param name="type">The claim type.</param>
+        /// <param name="value"> The claim value </param>
         public static void SetClaimValue<T>(this JwtPayload payload, string type, T value)
         {
             if (payload.ContainsKey(type))
